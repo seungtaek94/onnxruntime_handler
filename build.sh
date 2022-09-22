@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir onnxruntime
 cd onnxruntime
 wget https://github.com/microsoft/onnxruntime/releases/download/v1.12.1/onnxruntime-linux-x64-1.12.1.tgz
 tar -zxvf onnxruntime-linux-x64-1.12.1.tgz
