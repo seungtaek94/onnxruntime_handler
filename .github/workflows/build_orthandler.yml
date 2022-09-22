@@ -17,12 +17,9 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   ci_debug_linux-x64:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
       - name: Setup cmake
@@ -35,6 +32,16 @@ jobs:
 
       - name: Run gTest
         run: |
-          ls -al
           cd ./linux-x64/Debug
           ./test_orthandler
+
+  ci_debug_win-x64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.12
+        with:
+          cmake-version: '3.23.x'
