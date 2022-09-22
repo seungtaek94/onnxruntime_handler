@@ -35,5 +35,6 @@ jobs:
 
       - name: Run gTest
         run: |
-          cd linux-x64/Debug
-          test_orthandler
+          ls -al
+          cd ./linux-x64/Debug
+          ./test_orthandler
