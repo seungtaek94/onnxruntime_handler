@@ -36,7 +36,7 @@ jobs:
           ./test_orthandler
 
   ci_debug_win-x64:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
       - uses: actions/checkout@v3
@@ -45,10 +45,6 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v1.12
         with:
           cmake-version: '3.23.x'
-
-      - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          vsversion : "2019"
 
       - name: Build Onnxruntime Handler
         run: .\build.bat
