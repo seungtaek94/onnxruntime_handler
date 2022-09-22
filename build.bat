@@ -1,7 +1,9 @@
 mkdir onnxruntime
 cd onnxruntime
+dir
 powershell Invoke-WebRequest https://github.com/microsoft/onnxruntime/releases/download/v1.12.1/onnxruntime-win-x64-1.12.1.zip
-unzip onnxruntime-win-x64-1.12.1.zip
+dir
+unzip .\onnxruntime-win-x64-1.12.1.zip
 dir
 cd ../
 
