@@ -1,0 +1,11 @@
+.idea
+.vs
+cmake-build-*/
+*.exe
+*.zip
+*.tgz
+win-x64
+linux-x64
+
+googletest
+onnxruntime
