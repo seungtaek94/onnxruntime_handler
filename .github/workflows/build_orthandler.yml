@@ -46,7 +46,7 @@ jobs:
         with:
           cmake-version: '3.23.x'
 
-      - uses: ilammy/msvc-dev-cmd@v1.11
+      - uses: ilammy/msvc-dev-cmd@v1
         with:
           vsversion : "2019"
 
