@@ -40,9 +40,6 @@ target_compile_definitions(${TARGET} PRIVATE EXPORT_ORT_HANDLE)
 
 
 # Copy Onnxruntime binary to output directory
-message("@@ ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnxruntime.${DLL_FORMAT}")
-message("@@ ${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/${LIB_PREFIX}onnxruntime.${DLL_FORMAT}")
-
 add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E
         copy ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnxruntime.${DLL_FORMAT}
         ${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/${LIB_PREFIX}onnxruntime.${DLL_FORMAT})
