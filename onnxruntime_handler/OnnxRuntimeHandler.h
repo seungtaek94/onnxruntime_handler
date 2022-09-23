@@ -23,7 +23,7 @@
 
 
 #include <iostream>
-//#include "onnxruntime_cxx_api.h"
+#include "onnxruntime_cxx_api.h"
 
 class LIB_ORT_HANDLE OnnxRuntimeHandler
 {

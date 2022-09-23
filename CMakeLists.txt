@@ -60,6 +60,10 @@ target_include_directories(${TARGET_TEST} PUBLIC onnxruntime_handler)
 target_link_libraries(${TARGET_TEST} PUBLIC "${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/${LIB_PREFIX}orthandler.${LIB_FORMAT}")
 target_link_libraries(${TARGET_TEST} PUBLIC gtest)
 
+# Link Onnxruntime
+target_include_directories(${TARGET_TEST} PRIVATE ${ONNXRUNTIME_DIR}/include/)
+target_link_libraries(${TARGET_TEST} PRIVATE ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnxruntime.${LIB_FORMAT})
+
 add_test(${TARGET_TEST} COMMAND ${TARGET_TEST})
 
 
