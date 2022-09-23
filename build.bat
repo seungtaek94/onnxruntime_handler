@@ -1,10 +1,7 @@
 mkdir onnxruntime
 cd onnxruntime
-ls
 powershell  Invoke-WebRequest https://github.com/microsoft/onnxruntime/releases/download/v1.12.1/onnxruntime-win-x64-1.12.1.zip -OutFile ".\onnxruntime-win-x64-1.12.1.zip"
-ls
 unzip .\onnxruntime-win-x64-1.12.1.zip
-ls
 cd ../
 
 git clone -b release-1.12.1 https://github.com/google/googletest.git

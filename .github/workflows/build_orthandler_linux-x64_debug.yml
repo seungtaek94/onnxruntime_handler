@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Linux-x64
 
 # Controls when the workflow will run
 on:
@@ -34,17 +34,3 @@ jobs:
         run: |
           cd ./linux-x64/Debug
           ./test_orthandler
-
-  ci_debug_win-x64:
-    runs-on: windows-2019
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.12
-        with:
-          cmake-version: '3.23.x'
-
-      - name: Build Onnxruntime Handler
-        run: .\build.bat
