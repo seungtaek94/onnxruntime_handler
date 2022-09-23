@@ -1,23 +1,25 @@
+
+#include "onnxruntime_cxx_api.h"
 #include "OnnxRuntimeHandler.h"
-
-#include <iostream>
-
-void hello() {
-    std::cout << "Hello, World!" << std::endl;
-}
+#include "OnnxRuntimeHandlerCore.h"
 
 
-OnnxRuntimeHandler::OnnxRuntimeHandler()
+OnnxRuntimeHandler::OnnxRuntimeHandler(std::string model_path)
 {
-
+    core = (OnnxRuntimeHandlerCore*) new OnnxRuntimeHandlerCore(model_path);
 }
 
 OnnxRuntimeHandler::~OnnxRuntimeHandler()
 {
-
+    delete (OnnxRuntimeHandlerCore*)core;
 }
 
-int OnnxRuntimeHandler::add(int a, int b)
+std::vector<const char*> OnnxRuntimeHandler::GetInputNames()
 {
-    return a + b;
+    return ((OnnxRuntimeHandlerCore*)core)->GetInputNames();
+}
+
+std::vector<const char*> OnnxRuntimeHandler::GetOutputNames()
+{
+    return ((OnnxRuntimeHandlerCore*)core)->GetOutputNames();
 }

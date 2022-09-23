@@ -29,7 +29,8 @@ set(TARGET "orthandler")
 set(ONNXRUNTIME_VERSION "1.12.1")
 set(ONNXRUNTIME_DIR "${CMAKE_HOME_DIRECTORY}/onnxruntime/onnxruntime-${ARCHITECTURE}-${ONNXRUNTIME_VERSION}")
 
-add_library(${TARGET} SHARED onnxruntime_handler/OnnxRuntimeHandler.cpp)
+file(GLOB_RECURSE SOURCES LIST_DIRECTORIES FALSE "onnxruntime_handler/*.cpp")
+add_library(${TARGET} SHARED ${SOURCES})
 
 # Link Onnxruntime
 target_include_directories(${TARGET} PRIVATE ${ONNXRUNTIME_DIR}/include/)

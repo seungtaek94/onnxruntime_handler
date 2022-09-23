@@ -6,10 +6,24 @@
 
 #include "OnnxRuntimeHandler.h"
 
-TEST(teat_a, teat1)
+std::unique_ptr<OnnxRuntimeHandler> orthandler;
+
+// Test OnnxRuntimeHandler::OnnxRuntimeHandler(std::string)
+TEST(OnnxRuntimeHandler, OnnxRuntimeHandler)
 {
-    OnnxRuntimeHandler orthandle;
-    EXPECT_EQ(orthandle.add(1, 1), 2);
+    orthandler = std::make_unique<OnnxRuntimeHandler>("../../assets/models/shufflenetv2_x0.5.onnx");
+}
+
+// Test OnnxRuntimeHandler::GetInputNames()
+TEST(OnnxRuntimeHandler, GetInputNames)
+{
+    EXPECT_FALSE(std::strcmp("input", orthandler->GetInputNames()[0]));
+}
+
+// Test OnnxRuntimeHandler::GetOutputNames()
+TEST(OnnxRuntimeHandler, GetOutputNames)
+{
+    EXPECT_FALSE(std::strcmp("output", orthandler->GetOutputNames()[0]));
 }
 
 int main(int argc, char **argv) {

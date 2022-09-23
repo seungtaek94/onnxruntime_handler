@@ -9,7 +9,6 @@
     #define EXPORT __attribute__((visibility("default")))
     #define IMPORT
 #else
-    //  do nothing and hope for the best?
     #define EXPORT
     #define IMPORT
     #pragma warning Unknown dynamic link import/export semantics.
@@ -23,13 +22,16 @@
 
 
 #include <iostream>
-#include "onnxruntime_cxx_api.h"
+
 
 class LIB_ORT_HANDLE OnnxRuntimeHandler
 {
 public:
-    OnnxRuntimeHandler();
+    OnnxRuntimeHandler(std::string model_path);
     ~OnnxRuntimeHandler();
 
-    int add(int a, int b);
+    std::vector<const char*> GetInputNames();
+    std::vector<const char*> GetOutputNames();
+protected:
+    void* core;
 };
