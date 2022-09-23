@@ -22,14 +22,22 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
 
 OnnxRuntimeHandlerCore::OnnxRuntimeHandlerCore(std::string model_path)
 {
-    std::wstring w_model_path;
-    w_model_path.assign(model_path.begin(), model_path.end());
+
 
     _ort_session_options = std::make_unique<Ort::SessionOptions>();
     _ort_session_options->SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+    _ort_session_options->SetInterOpNumThreads(1);
 
     _ort_env = std::make_unique<Ort::Env>(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "Inference");
-    _ort_session = std::make_unique<Ort::Session>(*_ort_env.get(), w_model_path.c_str(), *_ort_session_options.get());
+
+
+#ifdef _WIN32
+    std::wstring w_model_path;
+    w_model_path.assign(model_path.begin(), model_path.end());
+    _ort_session = std::make_unique<Ort::Session>(*_ort_env, w_model_path.c_str(), *_ort_session_options);
+#else
+    _ort_session = std::make_unique<Ort::Session>(*_ort_env, model_path.c_str(), *_ort_session_options);
+#endif
 
     _ort_mem_info = std::make_unique<Ort::MemoryInfo>(
             Ort::MemoryInfo::CreateCpu(OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeCPU));

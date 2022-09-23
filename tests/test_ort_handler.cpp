@@ -2,6 +2,7 @@
 // Created by admin on 2022-09-22.
 //
 
+#include <cstring>
 #include "gtest/gtest.h"
 
 #include "OnnxRuntimeHandler.h"
