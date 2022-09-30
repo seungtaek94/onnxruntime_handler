@@ -27,7 +27,7 @@ TEST(OrtHandler, GetOutputNames)
     EXPECT_FALSE(std::strcmp("output", orthandler->GetOutputNames()[0]));
 }
 
-TEST(OrtHandler, TEST)
+TEST(OrtHandler, blobFromImageData)
 {
     float input[6][3] = {
         {1.1f, 1.2f, 1.3f},{2.1f, 2.2f, 2.3f},
