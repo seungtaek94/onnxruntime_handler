@@ -5,26 +5,54 @@
 #include <cstring>
 #include "gtest/gtest.h"
 
-#include "OnnxRuntimeHandler.h"
+#include "OrtHandler.h"
 
-std::unique_ptr<OnnxRuntimeHandler> orthandler;
+std::unique_ptr<Ort::Handler> orthandler;
 
-// Test OnnxRuntimeHandler::OnnxRuntimeHandler(std::string)
-TEST(OnnxRuntimeHandler, OnnxRuntimeHandler)
+// Test Ort::Handler::OnnxRuntimeHandler(std::string)
+TEST(OrtHandler, OrtHandler)
 {
-    orthandler = std::make_unique<OnnxRuntimeHandler>("../../assets/models/shufflenetv2_x0.5.onnx");
+    orthandler = std::make_unique<Ort::Handler>("../../assets/models/shufflenetv2_x0.5.onnx");
 }
 
-// Test OnnxRuntimeHandler::GetInputNames()
-TEST(OnnxRuntimeHandler, GetInputNames)
+// Test Ort::Handler::GetInputNames()
+TEST(OrtHandler, GetInputNames)
 {
     EXPECT_FALSE(std::strcmp("input", orthandler->GetInputNames()[0]));
 }
 
-// Test OnnxRuntimeHandler::GetOutputNames()
-TEST(OnnxRuntimeHandler, GetOutputNames)
+// Test Ort::Handler::GetOutputNames()
+TEST(OrtHandler, GetOutputNames)
 {
     EXPECT_FALSE(std::strcmp("output", orthandler->GetOutputNames()[0]));
+}
+
+TEST(OrtHandler, TEST)
+{
+    float input[6][3] = {
+        {1.1f, 1.2f, 1.3f},{2.1f, 2.2f, 2.3f},
+        {3.1f, 3.2f, 3.3f},{4.1f, 4.2f, 4.3f},
+        {5.1f, 5.2f, 5.3f},{6.1f, 6.2f, 6.3f},
+    };
+
+    float expect[6][3] = {
+        {1.1f, 2.1f, 3.1f},{4.1f, 5.1f, 6.1f},
+        {1.2f, 2.2f, 3.2f},{4.2f, 5.2f, 6.2f},
+        {1.3f, 2.3f, 3.3f},{4.3f, 5.3f, 6.3f},
+    };
+
+    Ort::Handler::blobFromImageData((float*)input, 3, 2, 3);
+
+    int nElement = sizeof(input) / sizeof(float);
+
+    EXPECT_EQ(sizeof(input), sizeof(expect));
+
+    float (*pInput)[3] = input;
+    float (*pExpect)[3] = expect;
+
+    for(int i=0; i < nElement; i++){
+        EXPECT_FLOAT_EQ(*(*pInput + i), *(*pExpect + i));
+    }
 }
 
 int main(int argc, char **argv) {
