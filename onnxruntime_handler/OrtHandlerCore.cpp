@@ -1,4 +1,4 @@
-#include "OnnxRuntimeHandlerCore.h"
+#include "OrtHandlerCore.h"
 #include "onnxruntime_session_options_config_keys.h"
 
 #include <sstream>
@@ -20,7 +20,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
 }
 
 
-OnnxRuntimeHandlerCore::OnnxRuntimeHandlerCore(std::string model_path)
+OrtHandlerCore::OrtHandlerCore(std::string model_path)
 {
 
 
@@ -47,25 +47,25 @@ OnnxRuntimeHandlerCore::OnnxRuntimeHandlerCore(std::string model_path)
     //std::cout << "Output Name: " << this->_getOutputName() << std::endl;
 }
 
-OnnxRuntimeHandlerCore::~OnnxRuntimeHandlerCore()
+OrtHandlerCore::~OrtHandlerCore()
 {
 
 }
 
 
-std::vector<const char*> OnnxRuntimeHandlerCore::GetInputNames()
+std::vector<const char*> OrtHandlerCore::GetInputNames()
 {
     return this->_getInputName();
 }
 
 
-std::vector<const char*> OnnxRuntimeHandlerCore::GetOutputNames()
+std::vector<const char*> OrtHandlerCore::GetOutputNames()
 {
     return  this->_getOutputName();
 }
 
 
-std::vector<const char*> OnnxRuntimeHandlerCore::_getInputName()
+std::vector<const char*> OrtHandlerCore::_getInputName()
 {
     Ort::AllocatorWithDefaultOptions allocator;
 
@@ -82,7 +82,7 @@ std::vector<const char*> OnnxRuntimeHandlerCore::_getInputName()
 }
 
 
-std::vector<const char*> OnnxRuntimeHandlerCore::_getOutputName()
+std::vector<const char*> OrtHandlerCore::_getOutputName()
 {
     Ort::AllocatorWithDefaultOptions allocator;
 

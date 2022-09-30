@@ -3,10 +3,11 @@
 #include <iostream>
 #include "onnxruntime_cxx_api.h"
 
-class OnnxRuntimeHandlerCore {
+
+class OrtHandlerCore {
 public:
-    OnnxRuntimeHandlerCore(std::string model_path);
-    ~OnnxRuntimeHandlerCore();
+    OrtHandlerCore(std::string model_path);
+    ~OrtHandlerCore();
 
 
     std::vector<const char*> GetInputNames();
