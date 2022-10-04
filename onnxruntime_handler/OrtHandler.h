@@ -31,8 +31,7 @@ namespace Ort
     class LIB_ORT_HANDLE Handler
     {
     public:
-        Handler(std::string model_path);
-        ~Handler();
+        static std::unique_ptr<Handler> LoadModel(std::string model_path);
 
         std::vector<const char*> GetInputNames();
         std::vector<const char*> GetOutputNames();
@@ -43,18 +42,13 @@ namespace Ort
                 std::vector<float> std = { 1.f, 1.f, 1.f },
                 bool swapRB = false);
 
-    protected:
+
+    public:
+        ~Handler();
+
+    private:
+        Handler();
         void* core;
     };
-
-
-
-   //Utils Handler::tests;
-
-
-
-
-
-
 }
 

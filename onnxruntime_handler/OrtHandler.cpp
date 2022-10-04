@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <memory>
 
 #include "onnxruntime_cxx_api.h"
 #include "OrtHandler.h"
@@ -7,20 +8,28 @@
 
 
 namespace Ort {
-    Handler::Handler(std::string model_path) {
-        core = (OrtHandlerCore *) new OrtHandlerCore(model_path);
+    Handler::Handler() {
+        core = (OrtHandlerCore *) new OrtHandlerCore();
     }
 
     Handler::~Handler() {
         delete (OrtHandlerCore *) core;
     }
 
+    std::unique_ptr<Handler> Handler::LoadModel(std::string model_path)
+    {
+        std::unique_ptr<Handler> handler(new Handler);
+        ((OrtHandlerCore *) handler->core)->LoadModel(model_path);
+
+        return std::move(handler);
+    }
+
     std::vector<const char *> Handler::GetInputNames() {
-        return ((OrtHandlerCore *) core)->GetInputNames();
+        return ((OrtHandlerCore *) this->core)->GetInputNames();
     }
 
     std::vector<const char *> Handler::GetOutputNames() {
-        return ((OrtHandlerCore *) core)->GetOutputNames();
+        return ((OrtHandlerCore *) this->core)->GetOutputNames();
     }
 
     void Handler::blobFromImageData(

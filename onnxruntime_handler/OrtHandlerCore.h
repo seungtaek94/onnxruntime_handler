@@ -6,8 +6,10 @@
 
 class OrtHandlerCore {
 public:
-    OrtHandlerCore(std::string model_path);
+    OrtHandlerCore();
     ~OrtHandlerCore();
+
+    void LoadModel(std::string model_path);
 
 
     std::vector<const char*> GetInputNames();

@@ -9,10 +9,11 @@
 
 std::unique_ptr<Ort::Handler> orthandler;
 
-// Test Ort::Handler::OnnxRuntimeHandler(std::string)
+// Test Ort::Handler::LoadModel()
+// OrtHandler
 TEST(OrtHandler, OrtHandler)
 {
-    orthandler = std::make_unique<Ort::Handler>("../../assets/models/shufflenetv2_x0.5.onnx");
+    ASSERT_NO_THROW(orthandler = Ort::Handler::LoadModel("../../assets/models/shufflenetv2_x0.5.onnx"));
 }
 
 // Test Ort::Handler::GetInputNames()
@@ -27,6 +28,7 @@ TEST(OrtHandler, GetOutputNames)
     EXPECT_FALSE(std::strcmp("output", orthandler->GetOutputNames()[0]));
 }
 
+// Test Ort::Handler::blobFromImageData()
 TEST(OrtHandler, blobFromImageData)
 {
     float input[6][3] = {
