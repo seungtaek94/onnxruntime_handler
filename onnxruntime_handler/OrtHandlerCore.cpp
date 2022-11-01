@@ -1,7 +1,11 @@
+#include <algorithm>
+#include <memory>
+#include <sstream>
+
 #include "OrtHandlerCore.h"
 #include "onnxruntime_session_options_config_keys.h"
 
-#include <sstream>
+
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
@@ -92,4 +96,68 @@ std::vector<const char*> OrtHandlerCore::_getOutputName()
     }
 
     return output_names;
+}
+
+
+Tensor<float> OrtHandlerCore::ToTensor(
+        float *data,
+        int rows, int cols,
+        const std::vector<float>& mean,
+        const std::vector<float>& std,
+        const bool swapRB,
+        const bool expandDim)
+{
+    OrtHandlerCore::blobFromImageData(data, rows, cols, mean, std, swapRB);
+    Tensor<float> tensor;
+    tensor.data = data;
+
+    std::vector<int64_t> dims;
+    if(expandDim)
+        tensor.dims = {1, 3, rows, cols};
+    else
+        tensor.dims = {3, rows, cols};
+
+    size_t size = 1;
+    for(auto & dim : tensor.dims)
+    {
+        size *= dim;
+    }
+    tensor.size = size;
+
+    return tensor;
+}
+
+
+void OrtHandlerCore::blobFromImageData(
+        float *data, const int rows, const int cols,
+        const std::vector<float>& mean,
+        const std::vector<float>& std,
+        const bool swapRB)
+{
+    const size_t nPixels = rows * cols;
+
+    float *flatten = new float[nPixels * 3];
+
+    int nPos = 0;
+    for (int row = 0; row < rows; row++)
+    {
+        for (int col = 0; col < cols; col += 1)
+        {
+            int nIdx = 0;
+            nIdx = row * cols * 3 + col * 3;
+
+            flatten[nPos] = (data[nIdx] - mean[0]) / std[0];                      // Blue
+            flatten[nPos + nPixels] = (data[nIdx + 1] - mean[1]) / std[1];        // Grean
+            flatten[nPos + (nPixels * 2)] = (data[nIdx + 2] - mean[2]) / std[2];  // Red
+
+            if (swapRB) // Swap B <-> R Channel
+            {
+                std::swap(flatten[nPos], flatten[nPos + (nPixels * 2)]);
+            }
+            nPos++;
+        }
+    }
+    std::copy_n(flatten, (nPixels * 3), data);
+
+    delete[] flatten;
 }

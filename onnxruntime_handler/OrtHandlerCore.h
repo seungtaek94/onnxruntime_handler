@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "onnxruntime_cxx_api.h"
+#include "OrtHandler.h"
 
 
 class OrtHandlerCore {
@@ -11,9 +12,23 @@ public:
 
     void LoadModel(std::string model_path);
 
-
     std::vector<const char*> GetInputNames();
     std::vector<const char*> GetOutputNames();
+
+
+    static Tensor<float> ToTensor(
+            float *data,
+            int rows, int cols,
+            const std::vector<float>& mean = { 0.f, 0.f, 0.f },
+            const std::vector<float>& std = { 1.f, 1.f, 1.f },
+            bool swapRB = false,
+            bool expandDim = true);
+
+    static void blobFromImageData(
+            float* data, int rows, int cols,
+            const std::vector<float>& mean = { 0.f, 0.f, 0.f },
+            const std::vector<float>& std = { 1.f, 1.f, 1.f },
+            bool swapRB = false);
 
 private:
     std::unique_ptr<Ort::Env> _ort_env;

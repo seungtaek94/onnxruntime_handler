@@ -28,32 +28,32 @@ TEST(OrtHandler, GetOutputNames)
     EXPECT_FALSE(std::strcmp("output", orthandler->GetOutputNames()[0]));
 }
 
-// Test Ort::Handler::blobFromImageData()
-TEST(OrtHandler, blobFromImageData)
+
+TEST(OrtHandler, ToTensor)
 {
+    // HWC
     float input[6][3] = {
-        {1.1f, 1.2f, 1.3f},{2.1f, 2.2f, 2.3f},
-        {3.1f, 3.2f, 3.3f},{4.1f, 4.2f, 4.3f},
-        {5.1f, 5.2f, 5.3f},{6.1f, 6.2f, 6.3f},
+            {1.1f, 1.2f, 1.3f},{2.1f, 2.2f, 2.3f},
+            {3.1f, 3.2f, 3.3f},{4.1f, 4.2f, 4.3f},
+            {5.1f, 5.2f, 5.3f},{6.1f, 6.2f, 6.3f},
     };
 
-    float expect[6][3] = {
-        {1.1f, 2.1f, 3.1f},{4.1f, 5.1f, 6.1f},
-        {1.2f, 2.2f, 3.2f},{4.2f, 5.2f, 6.2f},
-        {1.3f, 2.3f, 3.3f},{4.3f, 5.3f, 6.3f},
+    // CHW with swapRB==false
+    float expect_without_swapRB[6][3] = {
+            {1.1f, 2.1f, 3.1f},{4.1f, 5.1f, 6.1f},
+            {1.2f, 2.2f, 3.2f},{4.2f, 5.2f, 6.2f},
+            {1.3f, 2.3f, 3.3f},{4.3f, 5.3f, 6.3f},
     };
 
-    Ort::Handler::blobFromImageData((float*)input, 3, 2, 3);
+    Tensor<float> tensor  = Ort::Handler::ToTensor((float*)input, 2, 3);
 
-    int nElement = sizeof(input) / sizeof(float);
+    int nElement = sizeof(expect_without_swapRB) / sizeof(float);
 
-    EXPECT_EQ(sizeof(input), sizeof(expect));
-
-    float (*pInput)[3] = input;
-    float (*pExpect)[3] = expect;
+    EXPECT_EQ(tensor.size, nElement);
+    float (*pExpect)[3] = expect_without_swapRB;
 
     for(int i=0; i < nElement; i++){
-        EXPECT_FLOAT_EQ(*(*pInput + i), *(*pExpect + i));
+        EXPECT_FLOAT_EQ(tensor.data[i], *(*pExpect + i));
     }
 }
 

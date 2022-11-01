@@ -26,6 +26,15 @@
 
 //#include "Utils.h"
 
+template <typename T>
+struct Tensor
+{
+    T* data;
+    size_t size;
+    std::vector<int64_t> dims;
+};
+
+
 namespace Ort
 {
     class LIB_ORT_HANDLE Handler
@@ -36,12 +45,14 @@ namespace Ort
         std::vector<const char*> GetInputNames();
         std::vector<const char*> GetOutputNames();
 
-        static void blobFromImageData(
-                float* data, int rows, int cols, int ch = 3,
-                std::vector<float> mean = { 0.f, 0.f, 0.f },
-                std::vector<float> std = { 1.f, 1.f, 1.f },
-                bool swapRB = false);
-
+        // (H,W,3) cv::Mat data to (3,H,W) or (1,3,H,W) tensor;
+        static Tensor<float> ToTensor(
+                float *data,
+                int rows, int cols,
+                const std::vector<float>& mean = { 0.f, 0.f, 0.f },
+                const std::vector<float>& std = { 1.f, 1.f, 1.f },
+                bool swapRB = false,
+                bool expandDim = true);
 
     public:
         ~Handler();
