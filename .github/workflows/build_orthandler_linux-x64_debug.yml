@@ -56,9 +56,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: test
+          path: ./src
 
       - name: run
         run: |
+          cd ./src
           ls -al
           chmod 777 ./libonnxruntime.so
           chmod 777 ./liborthandler.so
