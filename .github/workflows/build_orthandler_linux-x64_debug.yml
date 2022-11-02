@@ -61,6 +61,7 @@ jobs:
         run: |
           ls -al
           chmod +x ./test_orthandler 
+          ls -al          
           ./test_orthandler
 
 
