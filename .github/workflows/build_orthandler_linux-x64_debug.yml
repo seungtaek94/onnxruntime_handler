@@ -30,42 +30,9 @@ jobs:
       - name: Build Onnxruntime Handler
         run: ./build.sh
 
-      - name: tttt
-        run: ls -al
-
-      - name: pwd
-        run: pwd
-
-      - name: Upload build result
-        uses: actions/upload-artifact@v3
-        with:
-          name: test
-          path: ./linux-x64/Debug
-
       - name: Run gTest
         run: |
           cd ./linux-x64/Debug
-          ls -al
-          ./test_orthandler
-
-  job2:
-    needs: ci_debug_linux-x64
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: test
-        uses: actions/download-artifact@v3
-        with:
-          name: test
-          path: ./linux-x64/Debug
-
-      - name: run
-        run: |
-          cd ./linux-x64/Debug
-          ls -al
-          chmod +rx ./libonnxruntime.so
-          chmod +rx ./liborthandler.so
-          chmod +x ./test_orthandler
           ./test_orthandler
 
 
