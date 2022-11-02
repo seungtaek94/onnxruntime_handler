@@ -33,6 +33,9 @@ jobs:
       - name: tttt
         run: ls -al
 
+      - nmae: pwd
+        run: pwd
+
       - name: Upload build result
         uses: actions/upload-artifact@v1
         with:
