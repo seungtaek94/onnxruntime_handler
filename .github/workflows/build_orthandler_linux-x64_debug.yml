@@ -65,7 +65,7 @@ jobs:
           chmod 777 ./libonnxruntime.so
           chmod 777 ./liborthandler.so
           chmod 777 ./test_orthandler
-          ./test_orthandler
+          sudo ./test_orthandler
 
       - name: run2
         run: |
