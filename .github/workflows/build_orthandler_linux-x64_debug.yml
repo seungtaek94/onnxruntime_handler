@@ -64,10 +64,12 @@ jobs:
           ls -al
           chmod 777 ./libonnxruntime.so
           chmod 777 ./liborthandler.so
-          chmod 777 ./test_orthandler 
+          chmod 777 ./test_orthandler
+          ./test_orthandler
 
       - name: run2
         run: |
+          cd ./src
           ls -al          
           ./test_orthandler
 
