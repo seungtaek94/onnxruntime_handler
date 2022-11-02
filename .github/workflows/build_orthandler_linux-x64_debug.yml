@@ -60,6 +60,7 @@ jobs:
       - name: run
         run: |
           ls -al
+          chmod +x ./test_orthandler 
           ./test_orthandler
 
 
