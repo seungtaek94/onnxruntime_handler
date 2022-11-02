@@ -37,7 +37,7 @@ jobs:
         run: pwd
 
       - name: Upload build result
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test
           path: ./linux-x64/Debug
@@ -45,6 +45,7 @@ jobs:
       - name: Run gTest
         run: |
           cd ./linux-x64/Debug
+          ls -al
           ./test_orthandler
 
   job2:
@@ -52,12 +53,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: test
 
       - name: run
-        run: ./test_orthandler
+        run: |
+          ls -al
+          ./test_orthandler
 
 
 
