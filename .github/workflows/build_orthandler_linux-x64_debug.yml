@@ -30,7 +30,28 @@ jobs:
       - name: Build Onnxruntime Handler
         run: ./build.sh
 
+      - name: Upload build result
+        uses: actions/upload-artifact@v1
+        with:
+          name: test
+          path: ./linux-x64/Debug/*
+
       - name: Run gTest
         run: |
           cd ./linux-x64/Debug
           ./test_orthandler
+
+  job2:
+    needs: ci_debug_linux-x64
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+        uses: actions/download-artifact@v1
+        with:
+          name: test
+
+      - name: run
+        run: ls -al
+
+
+
