@@ -60,9 +60,9 @@ jobs:
       - name: run
         run: |
           ls -al
-          chmod +rx ./libonnxruntime.so
-          chmod +rx ./liborthandler.so
-          chmod +rx ./test_orthandler 
+          chmod 777 ./libonnxruntime.so
+          chmod 777 ./liborthandler.so
+          chmod 777 ./test_orthandler 
           ls -al          
           ./test_orthandler
 
