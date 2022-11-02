@@ -32,8 +32,10 @@ struct Tensor
     T* data;
     size_t size;
     std::vector<int64_t> dims;
-};
 
+    Tensor(T* data, size_t size, std::vector<int64_t>& dims)
+    :data{data}, size{size}, dims{dims} { }
+};
 
 namespace Ort
 {
@@ -45,6 +47,8 @@ namespace Ort
         std::vector<const char*> GetInputNames();
         std::vector<const char*> GetOutputNames();
 
+        std::vector<Tensor<float>> Run(Tensor<float>& tensor);
+
         // (H,W,3) cv::Mat data to (3,H,W) or (1,3,H,W) tensor;
         static Tensor<float> ToTensor(
                 float *data,
@@ -53,7 +57,6 @@ namespace Ort
                 const std::vector<float>& std = { 1.f, 1.f, 1.f },
                 bool swapRB = false,
                 bool expandDim = true);
-
     public:
         ~Handler();
 

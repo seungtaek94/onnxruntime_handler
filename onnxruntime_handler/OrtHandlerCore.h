@@ -8,13 +8,14 @@
 class OrtHandlerCore {
 public:
     OrtHandlerCore();
-    ~OrtHandlerCore();
+    ~OrtHandlerCore() = default;
 
-    void LoadModel(std::string model_path);
+    void LoadModel(const std::string& model_path);
 
     std::vector<const char*> GetInputNames();
     std::vector<const char*> GetOutputNames();
 
+    std::vector<Tensor<float>> Run(Tensor<float>& tensor);
 
     static Tensor<float> ToTensor(
             float *data,
@@ -34,9 +35,21 @@ private:
     std::unique_ptr<Ort::Env> _ort_env;
     std::unique_ptr<Ort::Session> _ort_session;
     std::unique_ptr<Ort::SessionOptions> _ort_session_options;
-    std::unique_ptr<Ort::MemoryInfo> _ort_mem_info;
+    Ort::MemoryInfo _ort_mem_info{nullptr};
 
 private:
+    std::vector<const char*> _input_name;
+    std::vector<const char*> _output_name;
+
     std::vector<const char*> _getInputName();
     std::vector<const char*> _getOutputName();
+
+    template<typename T>
+    Ort::Value _tensorToOrtValue(Tensor<T>& tensor);
+
+    template<typename T>
+    Tensor<T> _ortValueToTensor(Ort::Value& ortValue);
+
+    template<typename T>
+    std::vector<Tensor<T>> _ortValuesToTensors(std::vector<Ort::Value>& ortValues);
 };

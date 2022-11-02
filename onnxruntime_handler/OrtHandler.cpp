@@ -32,6 +32,11 @@ namespace Ort {
         return ((OrtHandlerCore *) this->core)->GetOutputNames();
     }
 
+    std::vector<Tensor<float>> Handler::Run(Tensor<float>& tensor)
+    {
+        return ((OrtHandlerCore *) this->core)->Run(tensor);
+    }
+
     Tensor<float> Handler::ToTensor(
             float *data,
             int rows, int cols,

@@ -3,8 +3,6 @@
 #include <sstream>
 
 #include "OrtHandlerCore.h"
-#include "onnxruntime_session_options_config_keys.h"
-
 
 
 template <typename T>
@@ -32,16 +30,11 @@ OrtHandlerCore::OrtHandlerCore()
 
     _ort_env = std::make_unique<Ort::Env>(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "Inference");
 
-    _ort_mem_info = std::make_unique<Ort::MemoryInfo>(
-            Ort::MemoryInfo::CreateCpu(OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeCPU));
+    _ort_mem_info = Ort::MemoryInfo::CreateCpu(OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeCPU);
 }
 
-OrtHandlerCore::~OrtHandlerCore()
-{
 
-}
-
-void OrtHandlerCore::LoadModel(std::string model_path)
+void OrtHandlerCore::LoadModel(const std::string& model_path)
 {
 #ifdef _WIN32
     std::wstring w_model_path;
@@ -50,18 +43,21 @@ void OrtHandlerCore::LoadModel(std::string model_path)
 #else
     this->_ort_session = std::make_unique<Ort::Session>(*this->_ort_env, model_path.c_str(), *this->_ort_session_options);
 #endif
+
+    this->_input_name = _getInputName();
+    this->_output_name = _getOutputName();
 }
 
 
 std::vector<const char*> OrtHandlerCore::GetInputNames()
 {
-    return this->_getInputName();
+    return this->_input_name;
 }
 
 
 std::vector<const char*> OrtHandlerCore::GetOutputNames()
 {
-    return  this->_getOutputName();
+    return  this->_output_name;
 }
 
 
@@ -99,6 +95,22 @@ std::vector<const char*> OrtHandlerCore::_getOutputName()
 }
 
 
+std::vector<Tensor<float>> OrtHandlerCore::Run(Tensor<float>& tensor)
+{
+    auto ortValue = this->_tensorToOrtValue(tensor);
+
+    std::vector<Ort::Value> results = _ort_session->Run(
+                Ort::RunOptions{nullptr},
+                this->_input_name.data(),
+                &ortValue,
+                this->_input_name.size(),
+                this->_output_name.data(),
+                this->_output_name.size());
+
+    return this->_ortValuesToTensors<float>(results);
+}
+
+
 Tensor<float> OrtHandlerCore::ToTensor(
         float *data,
         int rows, int cols,
@@ -108,23 +120,20 @@ Tensor<float> OrtHandlerCore::ToTensor(
         const bool expandDim)
 {
     OrtHandlerCore::blobFromImageData(data, rows, cols, mean, std, swapRB);
-    Tensor<float> tensor;
-    tensor.data = data;
 
     std::vector<int64_t> dims;
     if(expandDim)
-        tensor.dims = {1, 3, rows, cols};
+        dims = {1, 3, rows, cols};
     else
-        tensor.dims = {3, rows, cols};
+        dims = {3, rows, cols};
 
     size_t size = 1;
-    for(auto & dim : tensor.dims)
+    for(auto & dim : dims)
     {
         size *= dim;
     }
-    tensor.size = size;
 
-    return tensor;
+    return Tensor<float> {data, size, dims};
 }
 
 
@@ -136,7 +145,7 @@ void OrtHandlerCore::blobFromImageData(
 {
     const size_t nPixels = rows * cols;
 
-    float *flatten = new float[nPixels * 3];
+    auto *flatten = new float[nPixels * 3];
 
     int nPos = 0;
     for (int row = 0; row < rows; row++)
@@ -160,4 +169,45 @@ void OrtHandlerCore::blobFromImageData(
     std::copy_n(flatten, (nPixels * 3), data);
 
     delete[] flatten;
+}
+
+
+template<typename T>
+Ort::Value OrtHandlerCore::_tensorToOrtValue(Tensor<T> &tensor)
+{
+    return Ort::Value::CreateTensor<T>(
+            this->_ort_mem_info,
+            tensor.data,
+            tensor.size,
+            tensor.dims.data(),
+            tensor.dims.size()
+    );
+}
+
+
+template<typename T>
+Tensor<T> OrtHandlerCore::_ortValueToTensor(Ort::Value &ortValue)
+{
+    size_t size = ortValue.GetTensorTypeAndShapeInfo().GetElementCount();
+    std::vector<int64_t> dims = ortValue.GetTensorTypeAndShapeInfo().GetShape();
+
+    return Tensor<T> {
+            ortValue.GetTensorMutableData<T>(),
+            size,
+            dims
+    };
+}
+
+
+template<typename T>
+std::vector<Tensor<T>> OrtHandlerCore::_ortValuesToTensors(std::vector<Ort::Value>& ortValues)
+{
+    std::vector<Tensor<T>> tensors;
+
+    for(auto& ortValue : ortValues)
+    {
+        tensors.emplace_back(this->template _ortValueToTensor<T>(ortValue));
+    }
+
+    return tensors;
 }
