@@ -57,7 +57,7 @@ jobs:
           name: test
 
       - name: run
-        run: ls -al
+        run: ./test_orthandler
 
 
 
