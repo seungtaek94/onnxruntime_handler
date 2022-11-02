@@ -56,21 +56,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: test
-          path: ./src
+          path: ./linux-x64/Debug
 
       - name: run
         run: |
-          cd ./src
+          cd ./linux-x64/Debug
           ls -al
           chmod 777 ./libonnxruntime.so
           chmod 777 ./liborthandler.so
           chmod 777 ./test_orthandler
-          sudo ./test_orthandler
-
-      - name: run2
-        run: |
-          cd ./src
-          ls -al          
           ./test_orthandler
 
 
