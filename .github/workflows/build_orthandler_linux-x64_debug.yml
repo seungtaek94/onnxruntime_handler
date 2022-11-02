@@ -63,9 +63,9 @@ jobs:
         run: |
           cd ./linux-x64/Debug
           ls -al
-          chmod 777 ./libonnxruntime.so
-          chmod 777 ./liborthandler.so
-          chmod 777 ./test_orthandler
+          chmod +rw ./libonnxruntime.so
+          chmod +rw ./liborthandler.so
+          chmod +r ./test_orthandler
           ./test_orthandler
 
 
