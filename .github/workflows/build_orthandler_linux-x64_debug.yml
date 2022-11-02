@@ -33,7 +33,7 @@ jobs:
       - name: tttt
         run: ls -al
 
-      - nmae: pwd
+      - name: pwd
         run: pwd
 
       - name: Upload build result
