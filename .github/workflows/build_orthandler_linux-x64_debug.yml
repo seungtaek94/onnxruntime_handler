@@ -57,9 +57,7 @@ jobs:
           name: test
 
       - name: run
-        run: |
-          cd test
-          ls -al
+        run: ls -al
 
 
 
