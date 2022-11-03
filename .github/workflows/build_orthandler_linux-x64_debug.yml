@@ -37,8 +37,8 @@ jobs:
 
       - name: gpu
         run: |
-          pwd
-          ls
+          docker run --runtime=nvidia --rm -v ${pwd}:/workspace \
+            --name build-ort-gpu-linx-x64 seungtaek/cuda:11.6.2-cudnn8-devel-ubuntu20.04 ./build.sh
         
 
 
