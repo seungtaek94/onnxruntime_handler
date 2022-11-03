@@ -31,6 +31,5 @@ jobs:
 
       - name: Test
         run: |
-          cd .\wind-x64\Debug
-          dir
-          ./test_orthandler.exe
+          cd .\win-x64\Debug
+          .\test_orthandler.exe
