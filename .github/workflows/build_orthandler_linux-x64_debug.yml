@@ -17,7 +17,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   ci_debug_linux-x64:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, gpu]
 
     steps:
       - uses: actions/checkout@v3
