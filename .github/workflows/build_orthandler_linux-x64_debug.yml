@@ -36,7 +36,10 @@ jobs:
           ./test_orthandler
 
       - name: gpu
-        run: nvidia-smi
+        run: |
+          nvidia-smi
+          nvcc --version
+        
 
 
 
