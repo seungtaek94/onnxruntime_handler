@@ -26,5 +26,11 @@ jobs:
         with:
           cmake-version: '3.23.x'
 
-      - name: Build Onnxruntime Handler
+      - name: Build
         run: .\build.bat
+
+      - name: Test
+        run: |
+          cd .\wind-x64\Debug
+          dir
+          ./test_orthandler.exe

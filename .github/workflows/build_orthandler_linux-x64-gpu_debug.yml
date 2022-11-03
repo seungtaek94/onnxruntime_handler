@@ -20,17 +20,23 @@ jobs:
     runs-on: [self-hosted, gpu]
 
     steps:
-      - name: clear
+      - name: Clear
         run: |
           docker run --runtime=nvidia --rm -v $(pwd):/workspace \
             --name build-ort-gpu-linx-x64 seungtaek/cuda:11.6.2-cudnn8-devel-ubuntu20.04 rm -rf ./*
 
       - uses: actions/checkout@v3
 
-      - name: build
+      - name: Build
         run: |
           docker run --runtime=nvidia --rm -v $(pwd):/workspace \
             --name build-ort-gpu-linx-x64 seungtaek/cuda:11.6.2-cudnn8-devel-ubuntu20.04 ./build.sh
+
+      - name: Test
+        run: |
+          docker run --runtime=nvidia --rm -v $(pwd):/workspace \
+           --name build-ort-gpu-linx-x64 seungtaek/cuda:11.6.2-cudnn8-devel-ubuntu20.04 \
+          /bin/sh -c 'cd ./linux-x64/Debug; ./test_orthandler'
       
         
 
