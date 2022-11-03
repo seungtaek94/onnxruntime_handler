@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: clear
-        run: rm -rf ./*
+        run: sudo rm -rf ./*
 
       - uses: actions/checkout@v3
 
