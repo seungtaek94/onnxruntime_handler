@@ -38,7 +38,7 @@ jobs:
       - name: gpu
         run: |
           nvidia-smi
-          nvcc --version
+          ls -al
         
 
 
