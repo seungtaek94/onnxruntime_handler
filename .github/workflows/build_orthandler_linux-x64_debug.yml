@@ -35,5 +35,8 @@ jobs:
           cd ./linux-x64/Debug
           ./test_orthandler
 
+      - name: test gpu
+        run: nvidia-smi -l
+
 
 
