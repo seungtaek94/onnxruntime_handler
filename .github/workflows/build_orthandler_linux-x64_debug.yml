@@ -25,7 +25,7 @@ jobs:
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.12
         with:
-          cmake-version: '3.23.x'
+          cmake-version: '3.16.x'
 
       - name: Build Onnxruntime Handler
         run: ./build.sh
