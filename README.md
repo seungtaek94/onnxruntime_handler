@@ -3,10 +3,10 @@
 Simple `c++` onnxruntime handler. 
 
 ## Build Status
-| Windows-x64                                                                                                                        | Linux-x64                                                                                                                            |
-|------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| ![Build Status](https://github.com/seungtaek94/onnxruntime_handler/actions/workflows/build_orthandler_win-x64_debug.yml/badge.svg) | ![Build Status](https://github.com/seungtaek94/onnxruntime_handler/actions/workflows/build_orthandler_linux-x64_debug.yml/badge.svg) |
-
+|     | Windows-x64                                                                                                                            | Linux-x64                                                                                                                                |
+|-----|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| CPU | ![Build Status](https://github.com/seungtaek94/onnxruntime_handler/actions/workflows/build_orthandler_win-x64-cpu_debug.yml/badge.svg) | ![Build Status](https://github.com/seungtaek94/onnxruntime_handler/actions/workflows/build_orthandler_linux-x64-cpu_debug.yml/badge.svg) |
+| GPU |                                                                                                                                        | ![Build Status](https://github.com/seungtaek94/onnxruntime_handler/actions/workflows/build_orthandler_linux-x64-gpu_debug.yml/badge.svg) |                                                                                                                                     
 
 ## Implementation status
 
