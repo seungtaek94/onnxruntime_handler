@@ -46,8 +46,18 @@ target_link_libraries(${TARGET} PRIVATE ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnx
 target_compile_definitions(${TARGET} PRIVATE EXPORT_ORT_HANDLE)
 
 add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E
-        copy ${ONNXRUNTIME_DIR}/lib/*.${DLL_FORMAT}
-        ${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/)
+        copy ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnxruntime.${DLL_FORMAT}
+        ${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/${LIB_PREFIX}onnxruntime.${DLL_FORMAT})
+
+if(USE_GPU)
+    add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E
+            copy ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnxruntime_providers_shared.${DLL_FORMAT}
+            ${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/${LIB_PREFIX}onnxruntime_providers_shared.${DLL_FORMAT})
+
+    add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E
+            copy ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnxruntime_providers_cuda.${DLL_FORMAT}
+            ${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/${LIB_PREFIX}onnxruntime_providers_cuda.${DLL_FORMAT})
+endif()
 
 
 #############################
