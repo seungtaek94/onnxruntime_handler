@@ -4,8 +4,14 @@ project(onnxruntime_handler)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wno-unused-result -Wno-unknown-pragmas -Wfatal-errors -Wno-deprecated-declarations -Wno-write-strings -pthread -Wl,-Bsymbolic")
 
+
+set(GPU "")
+if(USE_GPU)
+    set(GPU "-gpu")
+endif()
+
 if(MSVC)
-    set(ARCHITECTURE "win-x64")
+    set(ARCHITECTURE "win-x64${GPU}")
     set(LIB_FORMAT "lib")
     set(DLL_FORMAT "dll")
 
@@ -15,7 +21,7 @@ if(MSVC)
 
     set(CMAKE_CXX_FLAGS "/wd4013 /wd4018 /wd4028 /wd4530 /wd4047 /wd4068 /wd4090 /wd4101 /wd4113 /wd4133 /wd4190 /wd4244 /wd4267 /wd4305 /wd4477 /wd4996 /wd4819 /fp:fast")
 else()
-    set(ARCHITECTURE "linux-x64")
+    set(ARCHITECTURE "linux-x64${GPU}")
     set(LIB_PREFIX "lib")
     set(LIB_FORMAT "so")
     set(DLL_FORMAT "so")
@@ -39,11 +45,9 @@ target_link_libraries(${TARGET} PRIVATE ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnx
 # Export Library
 target_compile_definitions(${TARGET} PRIVATE EXPORT_ORT_HANDLE)
 
-
-# Copy Onnxruntime binary to output directory
 add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E
-        copy ${ONNXRUNTIME_DIR}/lib/${LIB_PREFIX}onnxruntime.${DLL_FORMAT}
-        ${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/${LIB_PREFIX}onnxruntime.${DLL_FORMAT})
+        copy ${ONNXRUNTIME_DIR}/lib/*.${DLL_FORMAT}
+        ${CMAKE_HOME_DIRECTORY}/${ARCHITECTURE}/${CMAKE_BUILD_TYPE}/)
 
 
 #############################
