@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  ci_debug_linux-x64:
+  build_linux-x64-cpu:
     runs-on: ubuntu-latest
 
     steps:

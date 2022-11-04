@@ -15,7 +15,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  ci_debug_win-x64:
+  build_windows-x64-cpu:
     runs-on: windows-2019
 
     steps:
