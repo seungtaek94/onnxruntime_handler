@@ -8,34 +8,43 @@
 
 
 namespace Ort {
-    Handler::Handler() {
+    Handler::Handler()
+    {
         core = (OrtHandlerCore *) new OrtHandlerCore();
     }
 
-    Handler::~Handler() {
+
+    Handler::~Handler()
+    {
         delete (OrtHandlerCore *) core;
     }
 
-    std::unique_ptr<Handler> Handler::LoadModel(std::string model_path)
+
+    std::unique_ptr<Handler> Handler::LoadModel(
+            const std::string& modelPath, InferenceOption inferenceOption)
     {
         std::unique_ptr<Handler> handler(new Handler);
-        ((OrtHandlerCore *) handler->core)->LoadModel(model_path);
+        ((OrtHandlerCore *) handler->core)->LoadModel(modelPath, inferenceOption);
 
         return handler;
     }
+
 
     std::vector<const char *> Handler::GetInputNames() {
         return ((OrtHandlerCore *) this->core)->GetInputNames();
     }
 
+
     std::vector<const char *> Handler::GetOutputNames() {
         return ((OrtHandlerCore *) this->core)->GetOutputNames();
     }
+
 
     std::vector<Tensor<float>> Handler::Run(Tensor<float>& tensor)
     {
         return ((OrtHandlerCore *) this->core)->Run(tensor);
     }
+
 
     Tensor<float> Handler::ToTensor(
             float *data,

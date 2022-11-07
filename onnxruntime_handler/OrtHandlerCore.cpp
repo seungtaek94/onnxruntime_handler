@@ -25,27 +25,91 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
 OrtHandlerCore::OrtHandlerCore()
 {
     _ort_session_options = std::make_unique<Ort::SessionOptions>();
-    _ort_session_options->SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
-    _ort_session_options->SetInterOpNumThreads(1);
-
     _ort_env = std::make_unique<Ort::Env>(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "Inference");
-
     _ort_mem_info = Ort::MemoryInfo::CreateCpu(OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeCPU);
 }
 
 
-void OrtHandlerCore::LoadModel(const std::string& model_path)
+void OrtHandlerCore::LoadModel(const std::string& modelPath, InferenceOption inferenceOption)
 {
+    this->_setInferenceOption(inferenceOption);
+
 #ifdef _WIN32
     std::wstring w_model_path;
-    w_model_path.assign(model_path.begin(), model_path.end());
-    _ort_session = std::make_unique<Ort::Session>(*_ort_env, w_model_path.c_str(), *_ort_session_options);
+    w_model_path.assign(modelPath.begin(), modelPath.end());
+    this->_ort_session = std::make_unique<Ort::Session>(*_ort_env, w_model_path.c_str(), *_ort_session_options);
 #else
-    this->_ort_session = std::make_unique<Ort::Session>(*this->_ort_env, model_path.c_str(), *this->_ort_session_options);
+    this->_ort_session = std::make_unique<Ort::Session>(*this->_ort_env, modelPath.c_str(), *this->_ort_session_options);
 #endif
 
     this->_input_name = _getInputName();
     this->_output_name = _getOutputName();
+}
+
+
+void OrtHandlerCore::_setInferenceOption(InferenceOption inferenceOption)
+{
+    this->_setGraphOptimizationLevel(inferenceOption.graphOptimization);
+    this->_setRunMode(inferenceOption.runMode);
+    this->_setInterOpNumThread(inferenceOption.interOpNumThread);
+    this->_setIntraOpNumThread(inferenceOption.intraOpNumThread);
+}
+
+
+void OrtHandlerCore::_setGraphOptimizationLevel(GraphOptimization graphOptimization)
+{
+    switch (graphOptimization)
+    {
+        case GraphOptimization::DISABLE:
+            _ort_session_options->SetGraphOptimizationLevel(
+                    GraphOptimizationLevel::ORT_DISABLE_ALL);
+            break;
+        case GraphOptimization::BASIC:
+            _ort_session_options->SetGraphOptimizationLevel(
+                    GraphOptimizationLevel::ORT_ENABLE_BASIC);
+            break;
+        case GraphOptimization::EXTENDED:
+            _ort_session_options->SetGraphOptimizationLevel(
+                    GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+            break;
+        case GraphOptimization::ALL:
+            _ort_session_options->SetGraphOptimizationLevel(
+                    GraphOptimizationLevel::ORT_ENABLE_ALL);
+            break;
+        default:
+            _ort_session_options->SetGraphOptimizationLevel(
+                    GraphOptimizationLevel::ORT_DISABLE_ALL);
+            break;
+    }
+}
+
+
+void OrtHandlerCore::_setRunMode(RunMode runMode)
+{
+    switch (runMode)
+    {
+        case RunMode::SEQUENTIAL:
+            _ort_session_options->SetExecutionMode(ExecutionMode::ORT_SEQUENTIAL);
+            break;
+        case RunMode::PARALLEL:
+            _ort_session_options->SetExecutionMode(ExecutionMode::ORT_PARALLEL);
+            break;
+        default:
+            _ort_session_options->SetExecutionMode(ExecutionMode::ORT_SEQUENTIAL);
+            break;
+    }
+}
+
+
+void OrtHandlerCore::_setInterOpNumThread(int n)
+{
+    _ort_session_options->SetInterOpNumThreads(n);
+}
+
+
+void OrtHandlerCore::_setIntraOpNumThread(int n)
+{
+    _ort_session_options->SetIntraOpNumThreads(n);
 }
 
 

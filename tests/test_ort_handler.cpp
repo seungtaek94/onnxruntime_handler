@@ -11,7 +11,8 @@ class TestOrtHandler : public ::testing::Test
 protected:
     void SetUp() override
     {
-        orthandler = Ort::Handler::LoadModel("../../assets/models/conv1x1.onnx");
+        InferenceOption inferenceOption;
+        orthandler = Ort::Handler::LoadModel("../../assets/models/conv1x1.onnx", inferenceOption);
     }
 
     void TearDown() override

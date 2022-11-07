@@ -10,7 +10,8 @@ public:
     OrtHandlerCore();
     ~OrtHandlerCore() = default;
 
-    void LoadModel(const std::string& model_path);
+    void LoadModel(
+            const std::string& modelPath, InferenceOption inferenceOption);
 
     std::vector<const char*> GetInputNames();
     std::vector<const char*> GetOutputNames();
@@ -52,4 +53,10 @@ private:
 
     template<typename T>
     std::vector<Tensor<T>> _ortValuesToTensors(std::vector<Ort::Value>& ortValues);
+
+    void _setInferenceOption(InferenceOption inferenceOption);
+    void _setGraphOptimizationLevel(GraphOptimization graphOptimization);
+    void _setRunMode(RunMode runMode);
+    void _setIntraOpNumThread(int n);
+    void _setInterOpNumThread(int n);
 };
