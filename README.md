@@ -14,14 +14,14 @@ Simple `c++` onnxruntime handler.
 - [X] Inference on the CPU.
 - [X] Support `float32` data type.
 - [X] Support multiple output.
-- [ ] Inference on the GPU.
+- [X] Inference on the GPU.
 - [ ] Dynamic input shape.
 - [ ] Batch inference.
 - [ ] Support for various data types
 
 
 ## Requirements
-- cmake 3.23.x
+- cmake >= 3.16.x
 - onnxruntime
 - `MSVC 16.xx(Visual Studio 2019)` for windows
 - `unzip` for windows
@@ -34,7 +34,7 @@ Simple `c++` onnxruntime handler.
 
 ## Build
 ### Common
-- Install CMake that version upper then 3.23.x
+- Install CMake that version upper then 3.16.x
 
 ### Linux
 
@@ -64,7 +64,9 @@ cd onnxruntime_handler
 #include "OrtHandler.h"
 
 // 1. Load model and initialize Ort::Handler.
-std::unique_ptr<Ort::Handler> orthandler = Ort::Handler::LoadModel("../../assets/models/conv1x1.onnx");
+InferenceOption inferenceOption;
+std::unique_ptr<Ort::Handler> orthandler = Ort::Handler::LoadModel(
+        "./assets/models/conv1x1.onnx", inferenceOption);
 
 // 2. Make tensor from data array.
 // Currently, this function only supports 3-channel single image.
