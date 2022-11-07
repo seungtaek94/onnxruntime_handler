@@ -49,25 +49,43 @@ enum class GraphOptimization
 enum class RunMode
 {
     SEQUENTIAL = 0,
-    PARALLEL = 1
+    PARALLEL = 1     // Only for CPU
 };
 
 
 typedef struct InferenceOption
 {
     GraphOptimization graphOptimization;
-    RunMode runMode;
-
-    // For parallelize the execution of the graph such as model.
-    // RunMode Should be set RunMode::PARALLEL
-    int interOpNumThread;
-
     // For parallelize the execution within nodes such as add operation.
     int intraOpNumThread;
 
+#ifdef USE_CUDA
+    int gpuIndex;
+
     InferenceOption()
     :
-    graphOptimization(GraphOptimization::DISABLE),
+    graphOptimization(GraphOptimization::ALL),
+    intraOpNumThread(0),
+    gpuIndex(0) { }
+
+    InferenceOption(
+            GraphOptimization graphOptimization,
+            int intraOpNumThread,
+            int gpuIndex)
+    :
+    graphOptimization(graphOptimization),
+    intraOpNumThread(intraOpNumThread),
+    gpuIndex(gpuIndex) { }
+#else
+    RunMode runMode;
+
+    // For parallelize the execution of the graph.
+    // RunMode Should be set RunMode::PARALLEL(So, GPU has no effect).
+    int interOpNumThread;
+
+    InferenceOption()
+    :
+    graphOptimization(GraphOptimization::ALL),
     runMode(RunMode::SEQUENTIAL),
     interOpNumThread(0),
     intraOpNumThread(0) { }
@@ -82,6 +100,7 @@ typedef struct InferenceOption
     runMode(runMode),
     interOpNumThread(interOpNumThread),
     intraOpNumThread(intraOpNumThread) { }
+#endif
 
     ~InferenceOption() = default;
 }InferenceOption;

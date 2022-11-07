@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wno-unused-result -Wno-unknown-pragmas -W
 set(GPU "")
 if(USE_GPU)
     set(GPU "-gpu")
+    add_compile_definitions(USE_CUDA)
 endif()
 
 if(MSVC)

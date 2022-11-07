@@ -38,6 +38,8 @@ private:
     std::unique_ptr<Ort::SessionOptions> _ort_session_options;
     Ort::MemoryInfo _ort_mem_info{nullptr};
 
+    OrtCUDAProviderOptions _ort_cuda_provider_options;
+
 private:
     std::vector<const char*> _input_name;
     std::vector<const char*> _output_name;
@@ -59,4 +61,5 @@ private:
     void _setRunMode(RunMode runMode);
     void _setIntraOpNumThread(int n);
     void _setInterOpNumThread(int n);
+    void _setCudaProvider(int gpuIndex);
 };

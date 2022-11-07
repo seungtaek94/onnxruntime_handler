@@ -45,7 +45,6 @@ namespace Ort {
         return ((OrtHandlerCore *) this->core)->Run(tensor);
     }
 
-
     Tensor<float> Handler::ToTensor(
             float *data,
             int rows, int cols,

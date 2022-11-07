@@ -50,9 +50,16 @@ void OrtHandlerCore::LoadModel(const std::string& modelPath, InferenceOption inf
 void OrtHandlerCore::_setInferenceOption(InferenceOption inferenceOption)
 {
     this->_setGraphOptimizationLevel(inferenceOption.graphOptimization);
+
+
+    this->_setIntraOpNumThread(inferenceOption.intraOpNumThread);
+
+#ifdef USE_CUDA
+    this->_setCudaProvider(inferenceOption.gpuIndex);
+#else
     this->_setRunMode(inferenceOption.runMode);
     this->_setInterOpNumThread(inferenceOption.interOpNumThread);
-    this->_setIntraOpNumThread(inferenceOption.intraOpNumThread);
+#endif
 }
 
 
@@ -104,6 +111,13 @@ void OrtHandlerCore::_setRunMode(RunMode runMode)
 void OrtHandlerCore::_setInterOpNumThread(int n)
 {
     _ort_session_options->SetInterOpNumThreads(n);
+}
+
+
+void OrtHandlerCore::_setCudaProvider(int gpuIndex)
+{
+    _ort_cuda_provider_options.device_id = gpuIndex;
+    _ort_session_options->AppendExecutionProvider_CUDA(_ort_cuda_provider_options);
 }
 
 
